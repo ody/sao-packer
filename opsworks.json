@@ -1,0 +1,37 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "region": "us-west-2",
+    "iam_instance_profile": "opsworks_cm_associate_node",
+    "profile": "packer_build",
+    "subnet_id": "subnet-b67d40d1",
+    "security_group_id": "sg-05279c8fc35370dc8",
+    "associate_public_ip_address": true,
+    "run_tags": {
+      "created_by": "cody",
+      "department": "bd",
+      "project": "aws-sao",
+      "lifetime": "1d",
+      "ocm_server": "aws-sao",
+      "ocm_region": "us-west-2",
+      "pp_application" : "sample_web_application"
+    },
+    "source_ami_filter": {
+      "filters": {
+      "virtualization-type": "hvm",
+      "name": "amzn2-ami-hvm-2.0.20180622.1-x86_64-gp2",
+      "root-device-type": "ebs"
+      },
+      "owners": ["137112412989"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "ami_name": "packer-sao-demo-{{timestamp}}"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "script": "./opsworks.sh",
+    "execute_command": "sudo -S sh -c '{{ .Vars }} {{ .Path }}'"
+    }]
+}
